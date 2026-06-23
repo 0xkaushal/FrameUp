@@ -1,0 +1,20 @@
+{
+  "name": "frameup",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Open source drag-and-drop website builder",
+  "license": "MIT",
+  "scripts": {
+    "dev": "pnpm --filter @frameup/web dev",
+    "build": "pnpm --filter @frameup/web build",
+    "lint": "pnpm --filter @frameup/web lint",
+    "typecheck": "pnpm --filter @frameup/web typecheck",
+    "db:generate": "pnpm --filter @frameup/web db:generate",
+    "db:push": "pnpm --filter @frameup/web db:push",
+    "db:studio": "pnpm --filter @frameup/web db:studio"
+  },
+  "packageManager": "pnpm@9.1.0",
+  "engines": {
+    "node": ">=18.0.0"
+  }
+}
