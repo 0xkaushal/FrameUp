@@ -11,6 +11,7 @@ export const appRouter = router({
       })
     )
     .mutation(async ({ ctx, input }) => {
+      console.log("username",input.username,input.email)
       const user = await ctx.db.user.upsert({
         where: { clerkId: ctx.userId },
         update: { username: input.username, email: input.email },
