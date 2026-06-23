@@ -136,7 +136,7 @@ export default function EditorPage() {
       <Toolbar
         pageId={page?.id ?? null}
         siteName={siteDetails?.name ?? ""}
-        siteSlug={siteDetails?.user?.username ?? siteDetails?.slug ?? ""}
+        siteSlug={siteDetails?.slug ?? ""}
       />
       <div className="flex flex-1 overflow-hidden">
         <DndContext

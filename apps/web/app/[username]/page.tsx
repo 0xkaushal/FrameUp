@@ -11,43 +11,32 @@ interface PublicPageProps {
 export async function generateMetadata({
   params,
 }: PublicPageProps): Promise<Metadata> {
-  const user = await db.user.findUnique({
-    where: { username: params.username },
-    include: {
-      sites: {
-        take: 1,
-        orderBy: { updatedAt: "desc" },
-      },
-    },
+  const site = await db.site.findUnique({
+    where: { slug: params.username },
+    include: { user: true },
   });
 
-  if (!user || !user.sites[0]) {
+  if (!site) {
     return { title: "Page Not Found" };
   }
 
   return {
-    title: `${user.sites[0].name} - ${user.username}`,
-    description: `${user.username}'s page built with FrameUp`,
+    title: `${site.name} - ${site.user.username}`,
+    description: `${site.user.username}'s page built with FrameUp`,
   };
 }
 
 export default async function PublicPage({ params }: PublicPageProps) {
-  const user = await db.user.findUnique({
-    where: { username: params.username },
-    include: {
-      sites: {
-        include: { pages: true },
-        take: 1,
-        orderBy: { updatedAt: "desc" },
-      },
-    },
+  const site = await db.site.findUnique({
+    where: { slug: params.username },
+    include: { pages: true, user: true },
   });
 
-  if (!user || !user.sites[0]) {
+  if (!site) {
     notFound();
   }
 
-  const page = user.sites[0].pages[0];
+  const page = site.pages[0];
 
   if (!page || !page.isPublished || !page.publishedSchema) {
     notFound();
