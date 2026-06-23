@@ -65,11 +65,18 @@ export default function DashboardPage() {
   // Sync user on first load
   const syncUser = trpc.syncUser.useMutation();
   useEffect(() => {
-    if (user?.username && user?.primaryEmailAddress?.emailAddress) {
-      syncUser.mutate({
-        username: user.username,
-        email: user.primaryEmailAddress.emailAddress,
-      });
+    const email = user?.primaryEmailAddress?.emailAddress;
+    if (!user || !email) return;
+
+    // Clerk only populates username if you enable it in the Clerk dashboard.
+    // Fall back to the email prefix so the upsert always succeeds.
+    const rawUsername =
+      user.username ??
+      email.split("@")[0].toLowerCase().replace(/[^a-z0-9-]/g, "-");
+    const username = rawUsername.slice(0, 30);
+
+    if (username.length >= 3) {
+      syncUser.mutate({ username, email });
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [user]);
