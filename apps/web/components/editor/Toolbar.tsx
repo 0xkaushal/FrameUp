@@ -9,13 +9,14 @@ import Link from "next/link";
 
 interface ToolbarProps {
   pageId: string | null;
+  siteId: string;
   siteName: string;
   siteSlug: string;
   workspaceId: string;
   workspaceName: string;
 }
 
-export function Toolbar({ pageId, siteName, siteSlug, workspaceId, workspaceName }: ToolbarProps) {
+export function Toolbar({ pageId, siteId, siteName, siteSlug, workspaceId, workspaceName }: ToolbarProps) {
   const { blocks, isDirty, setDirty } = useEditorStore();
   const { toast } = useToast();
 
@@ -82,7 +83,7 @@ export function Toolbar({ pageId, siteName, siteSlug, workspaceId, workspaceName
       </div>
 
       <div className="flex items-center gap-2">
-        <Link href={`/${siteSlug}`} target="_blank">
+        <Link href={`/preview/${siteId}`} target="_blank">
           <Button variant="ghost" size="sm" className="gap-2">
             <Eye className="h-4 w-4" />
             Preview

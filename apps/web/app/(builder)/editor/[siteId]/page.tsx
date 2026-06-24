@@ -135,6 +135,7 @@ export default function EditorPage() {
     <div className="flex h-screen flex-col">
       <Toolbar
         pageId={page?.id ?? null}
+        siteId={siteId}
         siteName={siteDetails?.name ?? ""}
         siteSlug={siteDetails?.slug ?? ""}
         workspaceId={siteDetails?.workspace?.id ?? ""}
