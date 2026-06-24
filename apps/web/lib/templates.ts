@@ -20,6 +20,9 @@ export const TEMPLATES: Template[] = [
           subtitle: "Designer · Developer · Creator",
           backgroundColor: "#7c3aed",
           textColor: "#ffffff",
+          socialGithub: "https://github.com",
+          socialTwitter: "https://twitter.com",
+          socialLinkedin: "https://linkedin.com",
         },
       },
       {
@@ -60,6 +63,8 @@ export const TEMPLATES: Template[] = [
           subtitle: "Fast, simple, and built for everyone.",
           backgroundColor: "#0f172a",
           textColor: "#ffffff",
+          socialTwitter: "https://twitter.com",
+          socialLinkedin: "https://linkedin.com",
         },
       },
       {
@@ -109,6 +114,9 @@ export const TEMPLATES: Template[] = [
           subtitle: "Content creator · Sharing ideas that matter",
           backgroundColor: "#ec4899",
           textColor: "#ffffff",
+          socialTwitter: "https://twitter.com",
+          socialInstagram: "https://instagram.com",
+          socialYoutube: "https://youtube.com",
         },
       },
       {

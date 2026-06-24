@@ -1,5 +1,6 @@
 "use client";
 
+import { Github, Twitter, Linkedin, Instagram, Youtube } from "lucide-react";
 import type { Block } from "@/lib/store/editor-store";
 
 interface BlockRendererProps {
@@ -25,10 +26,40 @@ const HERO_MIN_H: Record<string, string> = {
   lg: "min-h-[480px]",
 };
 
+const SOCIAL_ICONS = [
+  { key: "socialGithub", Icon: Github, label: "GitHub" },
+  { key: "socialTwitter", Icon: Twitter, label: "Twitter" },
+  { key: "socialLinkedin", Icon: Linkedin, label: "LinkedIn" },
+  { key: "socialInstagram", Icon: Instagram, label: "Instagram" },
+  { key: "socialYoutube", Icon: Youtube, label: "YouTube" },
+] as const;
+
 export function HeroBlock({ block, isEditor }: BlockRendererProps) {
-  const { title, subtitle, backgroundColor, textColor, paddingSize, textAlign } = block.props;
+  const {
+    title,
+    subtitle,
+    backgroundColor,
+    textColor,
+    paddingSize,
+    textAlign,
+    socialGithub,
+    socialTwitter,
+    socialLinkedin,
+    socialInstagram,
+    socialYoutube,
+  } = block.props;
   const py = HERO_PADDING[paddingSize ?? "md"];
   const minH = HERO_MIN_H[paddingSize ?? "md"];
+
+  const socialUrls: Record<string, string> = {
+    socialGithub: socialGithub || "",
+    socialTwitter: socialTwitter || "",
+    socialLinkedin: socialLinkedin || "",
+    socialInstagram: socialInstagram || "",
+    socialYoutube: socialYoutube || "",
+  };
+
+  const activeSocials = SOCIAL_ICONS.filter(({ key }) => socialUrls[key]);
 
   return (
     <div
@@ -50,6 +81,24 @@ export function HeroBlock({ block, isEditor }: BlockRendererProps) {
       </h1>
       {subtitle && (
         <p className="text-lg opacity-90 md:text-xl">{subtitle}</p>
+      )}
+      {activeSocials.length > 0 && (
+        <div className="mt-5 flex gap-4">
+          {activeSocials.map(({ key, Icon, label }) => (
+            <a
+              key={key}
+              href={isEditor ? undefined : socialUrls[key]}
+              target={isEditor ? undefined : "_blank"}
+              rel="noopener noreferrer"
+              aria-label={label}
+              className="opacity-80 transition-opacity hover:opacity-100"
+              style={{ color: textColor || "#ffffff" }}
+              onClick={(e) => isEditor && e.preventDefault()}
+            >
+              <Icon className="h-6 w-6" />
+            </a>
+          ))}
+        </div>
       )}
     </div>
   );

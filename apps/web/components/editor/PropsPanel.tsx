@@ -124,6 +124,41 @@ export function PropsPanel() {
               onChange={(v) => handlePropChange("textColor", v)}
               type="color"
             />
+            <div className="grid gap-2">
+              <Label className="text-xs font-semibold">Social Links</Label>
+              <div className="grid gap-2">
+                <PropField
+                  label="GitHub URL"
+                  value={selectedBlock.props.socialGithub || ""}
+                  onChange={(v) => handlePropChange("socialGithub", v)}
+                  placeholder="https://github.com/..."
+                />
+                <PropField
+                  label="Twitter / X URL"
+                  value={selectedBlock.props.socialTwitter || ""}
+                  onChange={(v) => handlePropChange("socialTwitter", v)}
+                  placeholder="https://twitter.com/..."
+                />
+                <PropField
+                  label="LinkedIn URL"
+                  value={selectedBlock.props.socialLinkedin || ""}
+                  onChange={(v) => handlePropChange("socialLinkedin", v)}
+                  placeholder="https://linkedin.com/..."
+                />
+                <PropField
+                  label="Instagram URL"
+                  value={selectedBlock.props.socialInstagram || ""}
+                  onChange={(v) => handlePropChange("socialInstagram", v)}
+                  placeholder="https://instagram.com/..."
+                />
+                <PropField
+                  label="YouTube URL"
+                  value={selectedBlock.props.socialYoutube || ""}
+                  onChange={(v) => handlePropChange("socialYoutube", v)}
+                  placeholder="https://youtube.com/..."
+                />
+              </div>
+            </div>
           </>
         )}
 
