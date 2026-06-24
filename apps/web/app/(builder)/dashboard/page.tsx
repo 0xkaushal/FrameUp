@@ -88,6 +88,11 @@ export default function DashboardPage() {
 
   return (
     <div className="container mx-auto px-4 py-8">
+      {user?.firstName && (
+        <p className="mb-6 text-lg text-muted-foreground">
+          Welcome back, <span className="font-semibold text-foreground">{user.firstName}</span> 👋
+        </p>
+      )}
       <div className="mb-8 flex items-center justify-between">
         <div>
           <h1 className="text-3xl font-bold">My Sites</h1>
