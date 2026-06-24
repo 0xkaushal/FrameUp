@@ -26,129 +26,111 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Skeleton } from "@/components/ui/skeleton";
 import { useToast } from "@/components/ui/use-toast";
-import { Plus, ExternalLink, Pencil, Trash2, Globe } from "lucide-react";
+import { Plus, Trash2, FolderOpen, Globe2 } from "lucide-react";
 
 export default function DashboardPage() {
   const { user } = useUser();
   const { toast } = useToast();
   const [open, setOpen] = useState(false);
-  const [siteName, setSiteName] = useState("");
-  const [siteSlug, setSiteSlug] = useState("");
+  const [wsName, setWsName] = useState("");
+  const [wsDesc, setWsDesc] = useState("");
 
   const utils = trpc.useUtils();
-  const { data: sites, isLoading } = trpc.getSites.useQuery();
+  const { data: workspaces, isLoading } = trpc.getWorkspaces.useQuery();
 
-  const createSite = trpc.createSite.useMutation({
+  const createWorkspace = trpc.createWorkspace.useMutation({
     onSuccess: () => {
-      toast({ title: "Site created!", description: "Start building your page." });
+      toast({ title: "Workspace created!" });
       setOpen(false);
-      setSiteName("");
-      setSiteSlug("");
-      utils.getSites.invalidate();
+      setWsName("");
+      setWsDesc("");
+      utils.getWorkspaces.invalidate();
     },
     onError: (error) => {
-      toast({
-        title: "Error",
-        description: error.message,
-        variant: "destructive",
-      });
+      toast({ title: "Error", description: error.message, variant: "destructive" });
     },
   });
 
-  const deleteSite = trpc.deleteSite.useMutation({
+  const deleteWorkspace = trpc.deleteWorkspace.useMutation({
     onSuccess: () => {
-      toast({ title: "Site deleted" });
-      utils.getSites.invalidate();
+      toast({ title: "Workspace deleted" });
+      utils.getWorkspaces.invalidate();
     },
   });
 
-  // Sync user on first load
+  // Sync Clerk user into DB
   const syncUser = trpc.syncUser.useMutation();
   useEffect(() => {
     const email = user?.primaryEmailAddress?.emailAddress;
     if (!user || !email) return;
-
-    // Clerk only populates username if you enable it in the Clerk dashboard.
-    // Fall back to the email prefix so the upsert always succeeds.
     const rawUsername =
       user.username ??
       email.split("@")[0].toLowerCase().replace(/[^a-z0-9-]/g, "-");
     const username = rawUsername.slice(0, 30);
-
-    if (username.length >= 3) {
-      syncUser.mutate({ username, email });
-    }
+    if (username.length >= 3) syncUser.mutate({ username, email });
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [user]);
-
-  const handleCreateSite = () => {
-    if (!siteName || !siteSlug) return;
-    createSite.mutate({ name: siteName, slug: siteSlug });
-  };
 
   return (
     <div className="container mx-auto px-4 py-8">
       {user?.firstName && (
         <p className="mb-6 text-lg text-muted-foreground">
-          Welcome back, <span className="font-semibold text-foreground">{user.firstName}</span> 👋
+          Welcome back,{" "}
+          <span className="font-semibold text-foreground">{user.firstName}</span>{" "}
+          👋
         </p>
       )}
+
       <div className="mb-8 flex items-center justify-between">
         <div>
-          <h1 className="text-3xl font-bold">My Sites</h1>
+          <h1 className="text-3xl font-bold">Workspaces</h1>
           <p className="text-muted-foreground">
-            Create and manage your websites
+            Organise your sites into workspaces
           </p>
         </div>
+
         <Dialog open={open} onOpenChange={setOpen}>
           <DialogTrigger asChild>
             <Button className="gap-2">
               <Plus className="h-4 w-4" />
-              New Site
+              New Workspace
             </Button>
           </DialogTrigger>
           <DialogContent>
             <DialogHeader>
-              <DialogTitle>Create a new site</DialogTitle>
+              <DialogTitle>Create a workspace</DialogTitle>
               <DialogDescription>
-                Give your site a name and choose a URL slug.
+                Group related sites together under one workspace.
               </DialogDescription>
             </DialogHeader>
             <div className="grid gap-4 py-4">
               <div className="grid gap-2">
-                <Label htmlFor="name">Site Name</Label>
+                <Label htmlFor="ws-name">Name</Label>
                 <Input
-                  id="name"
+                  id="ws-name"
                   placeholder="My Portfolio"
-                  value={siteName}
-                  onChange={(e) => setSiteName(e.target.value)}
+                  value={wsName}
+                  onChange={(e) => setWsName(e.target.value)}
                 />
               </div>
               <div className="grid gap-2">
-                <Label htmlFor="slug">URL Slug</Label>
-                <div className="flex items-center gap-2">
-                  <span className="text-sm text-muted-foreground">
-                    frameup.app/
-                  </span>
-                  <Input
-                    id="slug"
-                    placeholder="my-site"
-                    value={siteSlug}
-                    onChange={(e) =>
-                      setSiteSlug(
-                        e.target.value.toLowerCase().replace(/[^a-z0-9-]/g, "")
-                      )
-                    }
-                  />
-                </div>
+                <Label htmlFor="ws-desc">Description (optional)</Label>
+                <Input
+                  id="ws-desc"
+                  placeholder="Personal projects and experiments"
+                  value={wsDesc}
+                  onChange={(e) => setWsDesc(e.target.value)}
+                />
               </div>
             </div>
             <DialogFooter>
               <Button
-                onClick={handleCreateSite}
-                disabled={createSite.isPending || !siteName || !siteSlug}
+                onClick={() =>
+                  createWorkspace.mutate({ name: wsName, description: wsDesc || undefined })
+                }
+                disabled={createWorkspace.isPending || !wsName}
               >
-                {createSite.isPending ? "Creating..." : "Create Site"}
+                {createWorkspace.isPending ? "Creating..." : "Create Workspace"}
               </Button>
             </DialogFooter>
           </DialogContent>
@@ -169,62 +151,47 @@ export default function DashboardPage() {
             </Card>
           ))}
         </div>
-      ) : sites?.length === 0 ? (
+      ) : workspaces?.length === 0 ? (
         <Card className="py-12 text-center">
           <CardContent>
-            <Globe className="mx-auto mb-4 h-12 w-12 text-muted-foreground" />
-            <h3 className="mb-2 text-lg font-semibold">No sites yet</h3>
+            <Globe2 className="mx-auto mb-4 h-12 w-12 text-muted-foreground" />
+            <h3 className="mb-2 text-lg font-semibold">No workspaces yet</h3>
             <p className="mb-4 text-muted-foreground">
-              Create your first site and start building!
+              Create your first workspace to start building sites!
             </p>
             <Button onClick={() => setOpen(true)} className="gap-2">
               <Plus className="h-4 w-4" />
-              Create Your First Site
+              Create Workspace
             </Button>
           </CardContent>
         </Card>
       ) : (
         <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
-          {sites?.map((site) => (
-            <Card key={site.id}>
+          {workspaces?.map((ws) => (
+            <Card key={ws.id} className="flex flex-col">
               <CardHeader>
-                <CardTitle className="text-lg">{site.name}</CardTitle>
-                <CardDescription className="font-mono text-xs">
-                  frameup.app/{site.slug}
-                </CardDescription>
+                <CardTitle className="text-lg">{ws.name}</CardTitle>
+                {ws.description && (
+                  <CardDescription>{ws.description}</CardDescription>
+                )}
               </CardHeader>
-              <CardContent>
-                <div className="flex items-center gap-2">
-                  <div
-                    className={`h-2 w-2 rounded-full ${
-                      site.pages[0]?.isPublished
-                        ? "bg-green-500"
-                        : "bg-yellow-500"
-                    }`}
-                  />
-                  <span className="text-sm text-muted-foreground">
-                    {site.pages[0]?.isPublished ? "Published" : "Draft"}
-                  </span>
-                </div>
+              <CardContent className="flex-1">
+                <p className="text-sm text-muted-foreground">
+                  {ws._count.sites} site{ws._count.sites !== 1 ? "s" : ""}
+                </p>
               </CardContent>
               <CardFooter className="gap-2">
-                <Link href={`/editor/${site.id}`} className="flex-1">
+                <Link href={`/dashboard/${ws.id}`} className="flex-1">
                   <Button variant="outline" className="w-full gap-2" size="sm">
-                    <Pencil className="h-3.5 w-3.5" />
-                    Edit
+                    <FolderOpen className="h-3.5 w-3.5" />
+                    Open
                   </Button>
                 </Link>
-                {site.pages[0]?.isPublished && (
-                  <Link href={`/${site.slug}`} target="_blank">
-                    <Button variant="ghost" size="sm">
-                      <ExternalLink className="h-3.5 w-3.5" />
-                    </Button>
-                  </Link>
-                )}
                 <Button
                   variant="ghost"
                   size="sm"
-                  onClick={() => deleteSite.mutate({ siteId: site.id })}
+                  onClick={() => deleteWorkspace.mutate({ workspaceId: ws.id })}
+                  disabled={deleteWorkspace.isPending}
                 >
                   <Trash2 className="h-3.5 w-3.5 text-destructive" />
                 </Button>
