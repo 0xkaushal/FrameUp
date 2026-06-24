@@ -4,16 +4,18 @@ import { useEditorStore } from "@/lib/store/editor-store";
 import { trpc } from "@/lib/trpc/client";
 import { Button } from "@/components/ui/button";
 import { useToast } from "@/components/ui/use-toast";
-import { Save, Globe, Eye, Layers, Loader2 } from "lucide-react";
+import { Save, Globe, Eye, Layers, Loader2, ChevronRight } from "lucide-react";
 import Link from "next/link";
 
 interface ToolbarProps {
   pageId: string | null;
   siteName: string;
   siteSlug: string;
+  workspaceId: string;
+  workspaceName: string;
 }
 
-export function Toolbar({ pageId, siteName, siteSlug }: ToolbarProps) {
+export function Toolbar({ pageId, siteName, siteSlug, workspaceId, workspaceName }: ToolbarProps) {
   const { blocks, isDirty, setDirty } = useEditorStore();
   const { toast } = useToast();
 
@@ -59,10 +61,18 @@ export function Toolbar({ pageId, siteName, siteSlug }: ToolbarProps) {
 
   return (
     <header className="flex h-14 items-center justify-between border-b bg-background px-4">
-      <div className="flex items-center gap-3">
-        <Link href="/dashboard" className="flex items-center gap-2">
+      <div className="flex items-center gap-2">
+        <Link href="/dashboard" className="flex items-center gap-2 text-muted-foreground hover:text-foreground transition-colors">
           <Layers className="h-5 w-5 text-primary" />
         </Link>
+        <ChevronRight className="h-4 w-4 text-muted-foreground" />
+        <Link
+          href={`/dashboard/${workspaceId}`}
+          className="text-sm text-muted-foreground hover:text-foreground transition-colors"
+        >
+          {workspaceName}
+        </Link>
+        <ChevronRight className="h-4 w-4 text-muted-foreground" />
         <span className="text-sm font-medium">{siteName}</span>
         {isDirty && (
           <span className="rounded-full bg-yellow-500/10 px-2 py-0.5 text-xs text-yellow-500">

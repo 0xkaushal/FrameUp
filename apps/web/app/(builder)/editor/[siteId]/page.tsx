@@ -137,6 +137,8 @@ export default function EditorPage() {
         pageId={page?.id ?? null}
         siteName={siteDetails?.name ?? ""}
         siteSlug={siteDetails?.slug ?? ""}
+        workspaceId={siteDetails?.workspace?.id ?? ""}
+        workspaceName={siteDetails?.workspace?.name ?? ""}
       />
       <div className="flex flex-1 overflow-hidden">
         <DndContext

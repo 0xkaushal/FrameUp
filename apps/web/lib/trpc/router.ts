@@ -127,7 +127,11 @@ export const appRouter = router({
     .query(async ({ ctx, input }) => {
       return ctx.db.site.findFirst({
         where: { id: input.siteId, userId: ctx.user.id },
-        include: { pages: true, user: { select: { username: true } } },
+        include: {
+          pages: true,
+          user: { select: { username: true } },
+          workspace: { select: { id: true, name: true } },
+        },
       });
     }),
 
