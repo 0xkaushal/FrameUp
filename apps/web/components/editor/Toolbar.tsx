@@ -47,6 +47,18 @@ export function Toolbar({ pageId, siteId, siteName, siteSlug, workspaceId, works
     saveDraft.mutate({ pageId, schema: blocks });
   };
 
+  const handlePreview = () => {
+    const open = () => window.open(`/preview/${siteId}`, "_blank");
+    if (!isDirty || !pageId) {
+      open();
+      return;
+    }
+    saveDraft.mutate(
+      { pageId, schema: blocks },
+      { onSuccess: open }
+    );
+  };
+
   const handlePublish = () => {
     if (!pageId) return;
     // Save first, then publish
@@ -83,12 +95,20 @@ export function Toolbar({ pageId, siteId, siteName, siteSlug, workspaceId, works
       </div>
 
       <div className="flex items-center gap-2">
-        <Link href={`/preview/${siteId}`} target="_blank">
-          <Button variant="ghost" size="sm" className="gap-2">
+        <Button
+          variant="ghost"
+          size="sm"
+          className="gap-2"
+          onClick={handlePreview}
+          disabled={saveDraft.isPending}
+        >
+          {saveDraft.isPending ? (
+            <Loader2 className="h-4 w-4 animate-spin" />
+          ) : (
             <Eye className="h-4 w-4" />
-            Preview
-          </Button>
-        </Link>
+          )}
+          Preview
+        </Button>
         <Button
           variant="outline"
           size="sm"
