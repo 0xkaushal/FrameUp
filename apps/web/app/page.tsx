@@ -1,8 +1,14 @@
+"use client";
+
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { ArrowRight, Github, Layers, Zap, Globe } from "lucide-react";
+import { useUser } from "@clerk/nextjs";
+import { UserButton } from "@clerk/nextjs";
 
 export default function HomePage() {
+  const { isSignedIn, isLoaded } = useUser();
+
   return (
     <div className="min-h-screen bg-background">
       {/* Navigation */}
@@ -20,14 +26,25 @@ export default function HomePage() {
             >
               <Github className="h-5 w-5" />
             </Link>
-            <Link href="/sign-in">
-              <Button variant="ghost" size="sm">
-                Sign In
-              </Button>
-            </Link>
-            <Link href="/sign-up">
-              <Button size="sm">Get Started</Button>
-            </Link>
+            {isLoaded && (
+              isSignedIn ? (
+                <>
+                  <Link href="/dashboard">
+                    <Button variant="ghost" size="sm">Dashboard</Button>
+                  </Link>
+                  <UserButton afterSignOutUrl="/" />
+                </>
+              ) : (
+                <>
+                  <Link href="/sign-in">
+                    <Button variant="ghost" size="sm">Sign In</Button>
+                  </Link>
+                  <Link href="/sign-up">
+                    <Button size="sm">Get Started</Button>
+                  </Link>
+                </>
+              )
+            )}
           </div>
         </div>
       </nav>
@@ -49,7 +66,7 @@ export default function HomePage() {
             beautiful pages and publish them instantly at your own public URL.
           </p>
           <div className="flex flex-col items-center justify-center gap-4 sm:flex-row">
-            <Link href="/sign-up">
+            <Link href={isSignedIn ? "/dashboard" : "/sign-up"}>
               <Button size="lg" className="gap-2">
                 Start Building Free
                 <ArrowRight className="h-4 w-4" />
@@ -118,7 +135,7 @@ export default function HomePage() {
             Join thousands of creators building their online presence with
             FrameUp.
           </p>
-          <Link href="/sign-up">
+          <Link href={isSignedIn ? "/dashboard" : "/sign-up"}>
             <Button size="lg" className="gap-2">
               Create Your Page
               <ArrowRight className="h-4 w-4" />
