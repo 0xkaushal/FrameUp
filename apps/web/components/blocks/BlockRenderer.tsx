@@ -7,13 +7,43 @@ interface BlockRendererProps {
   isEditor?: boolean;
 }
 
+const HERO_PADDING: Record<string, string> = {
+  sm: "py-8",
+  md: "py-16",
+  lg: "py-32",
+};
+
+const BLOCK_PADDING: Record<string, string> = {
+  sm: "py-4",
+  md: "py-8",
+  lg: "py-16",
+};
+
+const HERO_MIN_H: Record<string, string> = {
+  sm: "min-h-[160px]",
+  md: "min-h-[300px]",
+  lg: "min-h-[480px]",
+};
+
 export function HeroBlock({ block, isEditor }: BlockRendererProps) {
-  const { title, subtitle, backgroundColor, textColor } = block.props;
+  const { title, subtitle, backgroundColor, textColor, paddingSize, textAlign } = block.props;
+  const py = HERO_PADDING[paddingSize ?? "md"];
+  const minH = HERO_MIN_H[paddingSize ?? "md"];
 
   return (
     <div
-      className="flex min-h-[300px] flex-col items-center justify-center px-6 py-16 text-center"
-      style={{ backgroundColor: backgroundColor || "#7c3aed", color: textColor || "#ffffff" }}
+      className={`flex ${minH} flex-col items-center justify-center px-6 ${py}`}
+      style={{
+        backgroundColor: backgroundColor || "#7c3aed",
+        color: textColor || "#ffffff",
+        textAlign: textAlign || "center",
+        alignItems:
+          textAlign === "left"
+            ? "flex-start"
+            : textAlign === "right"
+            ? "flex-end"
+            : "center",
+      }}
     >
       <h1 className="mb-4 text-4xl font-bold md:text-5xl">
         {title || "Your Headline Here"}
@@ -26,11 +56,12 @@ export function HeroBlock({ block, isEditor }: BlockRendererProps) {
 }
 
 export function TextBlock({ block, isEditor }: BlockRendererProps) {
-  const { content, fontSize, textAlign, textColor } = block.props;
+  const { content, fontSize, textAlign, textColor, paddingSize } = block.props;
+  const py = BLOCK_PADDING[paddingSize ?? "md"];
 
   return (
     <div
-      className="px-6 py-8"
+      className={`px-6 ${py}`}
       style={{
         fontSize: fontSize || "16px",
         textAlign: textAlign || "left",
@@ -45,10 +76,11 @@ export function TextBlock({ block, isEditor }: BlockRendererProps) {
 }
 
 export function ImageBlock({ block, isEditor }: BlockRendererProps) {
-  const { src, alt, width } = block.props;
+  const { src, alt, width, paddingSize } = block.props;
+  const py = BLOCK_PADDING[paddingSize ?? "md"];
 
   return (
-    <div className="flex justify-center px-6 py-8">
+    <div className={`flex justify-center px-6 ${py}`}>
       {src ? (
         <img
           src={src}
@@ -68,11 +100,12 @@ export function ImageBlock({ block, isEditor }: BlockRendererProps) {
 }
 
 export function ButtonBlock({ block, isEditor }: BlockRendererProps) {
-  const { text, url, backgroundColor, textColor, alignment } = block.props;
+  const { text, url, backgroundColor, textColor, alignment, paddingSize } = block.props;
+  const py = BLOCK_PADDING[paddingSize ?? "md"];
 
   return (
     <div
-      className="px-6 py-8"
+      className={`px-6 ${py}`}
       style={{ textAlign: alignment || "center" }}
     >
       <a
@@ -93,10 +126,11 @@ export function ButtonBlock({ block, isEditor }: BlockRendererProps) {
 }
 
 export function DividerBlock({ block }: BlockRendererProps) {
-  const { style, color } = block.props;
+  const { style, color, paddingSize } = block.props;
+  const py = BLOCK_PADDING[paddingSize ?? "sm"];
 
   return (
-    <div className="px-6 py-4">
+    <div className={`px-6 ${py}`}>
       <hr
         className="w-full"
         style={{

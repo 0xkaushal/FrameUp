@@ -4,7 +4,19 @@ import { useEditorStore } from "@/lib/store/editor-store";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/button";
-import { Trash2 } from "lucide-react";
+import { Trash2, AlignLeft, AlignCenter, AlignRight } from "lucide-react";
+
+const ALIGN_OPTIONS = [
+  { value: "left", icon: AlignLeft },
+  { value: "center", icon: AlignCenter },
+  { value: "right", icon: AlignRight },
+] as const;
+
+const SIZE_OPTIONS = [
+  { value: "sm", label: "S" },
+  { value: "md", label: "M" },
+  { value: "lg", label: "L" },
+] as const;
 
 export function PropsPanel() {
   const { blocks, selectedBlockId, updateBlock, removeBlock, selectBlock } =
@@ -46,6 +58,28 @@ export function PropsPanel() {
       </div>
 
       <div className="grid gap-4">
+        {/* Universal: Block Size */}
+        <div className="grid gap-2">
+          <Label className="text-xs">Block Size</Label>
+          <div className="flex gap-1">
+            {SIZE_OPTIONS.map(({ value, label }) => (
+              <Button
+                key={value}
+                variant={
+                  (selectedBlock.props.paddingSize ?? "md") === value
+                    ? "default"
+                    : "outline"
+                }
+                size="sm"
+                className="flex-1"
+                onClick={() => handlePropChange("paddingSize", value)}
+              >
+                {label}
+              </Button>
+            ))}
+          </div>
+        </div>
+
         {selectedBlock.type === "hero" && (
           <>
             <PropField
@@ -58,6 +92,26 @@ export function PropsPanel() {
               value={selectedBlock.props.subtitle || ""}
               onChange={(v) => handlePropChange("subtitle", v)}
             />
+            <div className="grid gap-2">
+              <Label className="text-xs">Text Align</Label>
+              <div className="flex gap-1">
+                {ALIGN_OPTIONS.map(({ value, icon: Icon }) => (
+                  <Button
+                    key={value}
+                    variant={
+                      (selectedBlock.props.textAlign ?? "center") === value
+                        ? "default"
+                        : "outline"
+                    }
+                    size="sm"
+                    className="flex-1"
+                    onClick={() => handlePropChange("textAlign", value)}
+                  >
+                    <Icon className="h-4 w-4" />
+                  </Button>
+                ))}
+              </div>
+            </div>
             <PropField
               label="Background Color"
               value={selectedBlock.props.backgroundColor || "#7c3aed"}
@@ -91,19 +145,19 @@ export function PropsPanel() {
             <div className="grid gap-2">
               <Label className="text-xs">Text Align</Label>
               <div className="flex gap-1">
-                {["left", "center", "right"].map((align) => (
+                {ALIGN_OPTIONS.map(({ value, icon: Icon }) => (
                   <Button
-                    key={align}
+                    key={value}
                     variant={
-                      selectedBlock.props.textAlign === align
+                      (selectedBlock.props.textAlign ?? "left") === value
                         ? "default"
                         : "outline"
                     }
                     size="sm"
-                    className="flex-1 capitalize"
-                    onClick={() => handlePropChange("textAlign", align)}
+                    className="flex-1"
+                    onClick={() => handlePropChange("textAlign", value)}
                   >
-                    {align}
+                    <Icon className="h-4 w-4" />
                   </Button>
                 ))}
               </div>
@@ -166,19 +220,19 @@ export function PropsPanel() {
             <div className="grid gap-2">
               <Label className="text-xs">Alignment</Label>
               <div className="flex gap-1">
-                {["left", "center", "right"].map((align) => (
+                {ALIGN_OPTIONS.map(({ value, icon: Icon }) => (
                   <Button
-                    key={align}
+                    key={value}
                     variant={
-                      selectedBlock.props.alignment === align
+                      (selectedBlock.props.alignment ?? "center") === value
                         ? "default"
                         : "outline"
                     }
                     size="sm"
-                    className="flex-1 capitalize"
-                    onClick={() => handlePropChange("alignment", align)}
+                    className="flex-1"
+                    onClick={() => handlePropChange("alignment", value)}
                   >
-                    {align}
+                    <Icon className="h-4 w-4" />
                   </Button>
                 ))}
               </div>
