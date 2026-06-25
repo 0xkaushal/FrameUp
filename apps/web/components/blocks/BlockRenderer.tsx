@@ -206,33 +206,64 @@ const COLUMN_RATIOS: Record<string, [number, number]> = {
   "67/33": [2, 1],
 };
 
+function VerticalDivider({ color }: { color?: string }) {
+  return (
+    <div
+      className="self-stretch w-px shrink-0"
+      style={{ backgroundColor: color || "hsl(var(--border))" }}
+    />
+  );
+}
+
 export function ColumnsBlock({ block, isEditor }: BlockRendererProps) {
-  const { leftContent, rightContent, columnRatio, fontSize, textColor, paddingSize } = block.props;
+  const {
+    leftContent,
+    middleContent,
+    rightContent,
+    columnRatio,
+    fontSize,
+    textColor,
+    paddingSize,
+    verticalDivider,
+    dividerColor,
+  } = block.props;
   const py = BLOCK_PADDING[paddingSize ?? "md"];
   const [leftFlex, rightFlex] = COLUMN_RATIOS[columnRatio ?? "50/50"];
+  const hasMiddle = !!middleContent || (isEditor && middleContent !== undefined && middleContent !== null);
+  const showDivider = verticalDivider === true || verticalDivider === "true";
+
+  const colStyle = (flex: number) => ({
+    flex,
+    minWidth: 0,
+    fontSize: fontSize || "16px",
+    color: textColor || undefined,
+  });
 
   return (
-    <div className={`flex gap-6 px-6 ${py}`}>
-      <div
-        style={{
-          flex: leftFlex,
-          minWidth: 0,
-          fontSize: fontSize || "16px",
-          color: textColor || undefined,
-        }}
-      >
+    <div className={`flex items-stretch gap-0 px-6 ${py}`}>
+      {/* Left */}
+      <div style={{ ...colStyle(leftFlex), padding: "0 12px 0 0" }}>
         <p className="whitespace-pre-wrap">
           {leftContent || (isEditor ? "Left column text..." : "")}
         </p>
       </div>
-      <div
-        style={{
-          flex: rightFlex,
-          minWidth: 0,
-          fontSize: fontSize || "16px",
-          color: textColor || undefined,
-        }}
-      >
+
+      {showDivider && <VerticalDivider color={dividerColor} />}
+
+      {/* Middle (optional 3rd column) */}
+      {hasMiddle && (
+        <>
+          <div style={{ ...colStyle(1), padding: "0 12px" }}>
+            <p className="whitespace-pre-wrap">
+              {middleContent || (isEditor ? "Middle column text..." : "")}
+            </p>
+          </div>
+          {showDivider && <VerticalDivider color={dividerColor} />}
+        </>
+      )}
+
+      {/* Right */}
+      <div style={{ ...colStyle(hasMiddle ? 1 : rightFlex), padding: "0 0 0 12px" }}>
         <p className="whitespace-pre-wrap">
           {rightContent || (isEditor ? "Right column text..." : "")}
         </p>

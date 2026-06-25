@@ -381,6 +381,15 @@ export function PropsPanel() {
               />
             </div>
             <div className="grid gap-2">
+              <Label className="text-xs">Middle Column (optional — enables 3 columns)</Label>
+              <textarea
+                className="flex min-h-[80px] w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+                value={selectedBlock.props.middleContent || ""}
+                placeholder="Leave empty for 2 columns"
+                onChange={(e) => handlePropChange("middleContent", e.target.value)}
+              />
+            </div>
+            <div className="grid gap-2">
               <Label className="text-xs">Right Column</Label>
               <textarea
                 className="flex min-h-[80px] w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
@@ -389,7 +398,7 @@ export function PropsPanel() {
               />
             </div>
             <div className="grid gap-2">
-              <Label className="text-xs">Column Ratio</Label>
+              <Label className="text-xs">Column Ratio (2-col only)</Label>
               <div className="flex flex-wrap gap-1">
                 {["50/50", "60/40", "40/60", "67/33", "33/67"].map((r) => (
                   <Button
@@ -408,6 +417,27 @@ export function PropsPanel() {
                 ))}
               </div>
             </div>
+            <div className="grid gap-2">
+              <Label className="text-xs">Vertical Divider</Label>
+              <div className="flex gap-1">
+                <Button
+                  variant={selectedBlock.props.verticalDivider ? "default" : "outline"}
+                  size="sm"
+                  className="flex-1"
+                  onClick={() => handlePropChange("verticalDivider", !selectedBlock.props.verticalDivider as any)}
+                >
+                  {selectedBlock.props.verticalDivider ? "On" : "Off"}
+                </Button>
+              </div>
+            </div>
+            {selectedBlock.props.verticalDivider && (
+              <PropField
+                label="Divider Color"
+                value={selectedBlock.props.dividerColor || ""}
+                onChange={(v) => handlePropChange("dividerColor", v)}
+                type="color"
+              />
+            )}
             <PropField
               label="Font Size"
               value={selectedBlock.props.fontSize || "16px"}
