@@ -67,7 +67,7 @@ const BLOCK_TYPES = [
   },
   {
     type: "columns",
-    label: "2 Columns",
+    label: "Multi Column",
     icon: Columns2,
     defaultProps: {
       leftContent: "Left column text...",
