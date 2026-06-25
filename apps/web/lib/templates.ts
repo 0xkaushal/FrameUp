@@ -20,6 +20,8 @@ export const TEMPLATES: Template[] = [
           subtitle: "Designer · Developer · Creator",
           backgroundColor: "#7c3aed",
           textColor: "#ffffff",
+          profileImage: "https://i.pravatar.cc/150?img=3",
+          profileImageSize: "md",
           socialGithub: "https://github.com",
           socialTwitter: "https://twitter.com",
           socialLinkedin: "https://linkedin.com",

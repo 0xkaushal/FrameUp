@@ -42,6 +42,8 @@ export function HeroBlock({ block, isEditor }: BlockRendererProps) {
     textColor,
     paddingSize,
     textAlign,
+    profileImage,
+    profileImageSize,
     socialGithub,
     socialTwitter,
     socialLinkedin,
@@ -61,6 +63,13 @@ export function HeroBlock({ block, isEditor }: BlockRendererProps) {
 
   const activeSocials = SOCIAL_ICONS.filter(({ key }) => socialUrls[key]);
 
+  const avatarSize =
+    profileImageSize === "sm"
+      ? "h-16 w-16"
+      : profileImageSize === "lg"
+      ? "h-32 w-32"
+      : "h-24 w-24";
+
   return (
     <div
       className={`flex ${minH} flex-col items-center justify-center px-6 ${py}`}
@@ -76,6 +85,14 @@ export function HeroBlock({ block, isEditor }: BlockRendererProps) {
             : "center",
       }}
     >
+      {profileImage && (
+        <img
+          src={profileImage}
+          alt={title || "Profile"}
+          className={`${avatarSize} mb-4 rounded-full object-cover ring-4`}
+          style={{ ringColor: textColor || "#ffffff", borderColor: `${textColor || "#ffffff"}40` }}
+        />
+      )}
       <h1 className="mb-4 text-4xl font-bold md:text-5xl">
         {title || "Your Headline Here"}
       </h1>

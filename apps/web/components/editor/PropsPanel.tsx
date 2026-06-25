@@ -92,6 +92,32 @@ export function PropsPanel() {
               value={selectedBlock.props.subtitle || ""}
               onChange={(v) => handlePropChange("subtitle", v)}
             />
+            <PropField
+              label="Profile Image URL"
+              value={selectedBlock.props.profileImage || ""}
+              onChange={(v) => handlePropChange("profileImage", v)}
+              placeholder="https://example.com/avatar.jpg"
+            />
+            <div className="grid gap-2">
+              <Label className="text-xs">Profile Image Size</Label>
+              <div className="flex gap-1">
+                {SIZE_OPTIONS.map(({ value, label }) => (
+                  <Button
+                    key={value}
+                    variant={
+                      (selectedBlock.props.profileImageSize ?? "md") === value
+                        ? "default"
+                        : "outline"
+                    }
+                    size="sm"
+                    className="flex-1"
+                    onClick={() => handlePropChange("profileImageSize", value)}
+                  >
+                    {label}
+                  </Button>
+                ))}
+              </div>
+            </div>
             <div className="grid gap-2">
               <Label className="text-xs">Text Align</Label>
               <div className="flex gap-1">
