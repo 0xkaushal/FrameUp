@@ -2,7 +2,7 @@ import { create } from "zustand";
 
 export interface Block {
   id: string;
-  type: "hero" | "text" | "image" | "button" | "divider";
+  type: "hero" | "text" | "image" | "button" | "divider" | "columns";
   props: Record<string, any>;
 }
 

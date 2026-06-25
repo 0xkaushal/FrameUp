@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import { useDraggable } from "@dnd-kit/core";
-import { Type, Image, MousePointer, Minus, LayoutTemplate, Wand2 } from "lucide-react";
+import { Type, Image, MousePointer, Minus, LayoutTemplate, Wand2, Columns2 } from "lucide-react";
 import { useEditorStore } from "@/lib/store/editor-store";
 import { TEMPLATES } from "@/lib/templates";
 import type { Block } from "@/lib/store/editor-store";
@@ -63,6 +63,18 @@ const BLOCK_TYPES = [
     defaultProps: {
       style: "solid",
       color: "",
+    },
+  },
+  {
+    type: "columns",
+    label: "2 Columns",
+    icon: Columns2,
+    defaultProps: {
+      leftContent: "Left column text...",
+      rightContent: "Right column text...",
+      columnRatio: "50/50",
+      fontSize: "16px",
+      textColor: "",
     },
   },
 ] as const;

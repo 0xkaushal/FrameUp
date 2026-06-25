@@ -229,6 +229,46 @@ export function PropsPanel() {
               onChange={(v) => handlePropChange("textColor", v)}
               type="color"
             />
+            <div className="grid gap-2">
+              <Label className="text-xs">Block Width</Label>
+              <div className="flex gap-1">
+                {["25%", "50%", "75%", "100%"].map((w) => (
+                  <Button
+                    key={w}
+                    variant={
+                      (selectedBlock.props.blockWidth ?? "100%") === w
+                        ? "default"
+                        : "outline"
+                    }
+                    size="sm"
+                    className="flex-1 text-xs"
+                    onClick={() => handlePropChange("blockWidth", w)}
+                  >
+                    {w}
+                  </Button>
+                ))}
+              </div>
+            </div>
+            <div className="grid gap-2">
+              <Label className="text-xs">Block Alignment</Label>
+              <div className="flex gap-1">
+                {ALIGN_OPTIONS.map(({ value, icon: Icon }) => (
+                  <Button
+                    key={value}
+                    variant={
+                      (selectedBlock.props.blockAlign ?? "center") === value
+                        ? "default"
+                        : "outline"
+                    }
+                    size="sm"
+                    className="flex-1"
+                    onClick={() => handlePropChange("blockAlign", value)}
+                  >
+                    <Icon className="h-4 w-4" />
+                  </Button>
+                ))}
+              </div>
+            </div>
           </>
         )}
 
@@ -325,6 +365,58 @@ export function PropsPanel() {
               label="Color"
               value={selectedBlock.props.color || ""}
               onChange={(v) => handlePropChange("color", v)}
+              type="color"
+            />
+          </>
+        )}
+
+        {selectedBlock.type === "columns" && (
+          <>
+            <div className="grid gap-2">
+              <Label className="text-xs">Left Column</Label>
+              <textarea
+                className="flex min-h-[80px] w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+                value={selectedBlock.props.leftContent || ""}
+                onChange={(e) => handlePropChange("leftContent", e.target.value)}
+              />
+            </div>
+            <div className="grid gap-2">
+              <Label className="text-xs">Right Column</Label>
+              <textarea
+                className="flex min-h-[80px] w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+                value={selectedBlock.props.rightContent || ""}
+                onChange={(e) => handlePropChange("rightContent", e.target.value)}
+              />
+            </div>
+            <div className="grid gap-2">
+              <Label className="text-xs">Column Ratio</Label>
+              <div className="flex flex-wrap gap-1">
+                {["50/50", "60/40", "40/60", "67/33", "33/67"].map((r) => (
+                  <Button
+                    key={r}
+                    variant={
+                      (selectedBlock.props.columnRatio ?? "50/50") === r
+                        ? "default"
+                        : "outline"
+                    }
+                    size="sm"
+                    className="flex-1 text-xs"
+                    onClick={() => handlePropChange("columnRatio", r)}
+                  >
+                    {r}
+                  </Button>
+                ))}
+              </div>
+            </div>
+            <PropField
+              label="Font Size"
+              value={selectedBlock.props.fontSize || "16px"}
+              onChange={(v) => handlePropChange("fontSize", v)}
+            />
+            <PropField
+              label="Text Color"
+              value={selectedBlock.props.textColor || ""}
+              onChange={(v) => handlePropChange("textColor", v)}
               type="color"
             />
           </>

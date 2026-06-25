@@ -89,8 +89,7 @@ export function HeroBlock({ block, isEditor }: BlockRendererProps) {
         <img
           src={profileImage}
           alt={title || "Profile"}
-          className={`${avatarSize} mb-4 rounded-full object-cover ring-4`}
-          style={{ ringColor: textColor || "#ffffff", borderColor: `${textColor || "#ffffff"}40` }}
+          className={`${avatarSize} mb-4 rounded-full object-cover ring-4 ring-white/30`}
         />
       )}
       <h1 className="mb-4 text-4xl font-bold md:text-5xl">
@@ -122,13 +121,21 @@ export function HeroBlock({ block, isEditor }: BlockRendererProps) {
 }
 
 export function TextBlock({ block, isEditor }: BlockRendererProps) {
-  const { content, fontSize, textAlign, textColor, paddingSize } = block.props;
+  const { content, fontSize, textAlign, textColor, paddingSize, blockWidth, blockAlign } = block.props;
   const py = BLOCK_PADDING[paddingSize ?? "md"];
+  const width = blockWidth ?? "100%";
+  const align = blockAlign ?? "center";
+  const marginInline =
+    align === "center" ? "auto" : align === "right" ? "0 0 0 auto" : "0";
 
   return (
     <div
       className={`px-6 ${py}`}
       style={{
+        width,
+        margin: `0`,
+        marginLeft: align === "center" ? "auto" : align === "right" ? "auto" : "0",
+        marginRight: align === "center" ? "auto" : align === "left" ? "auto" : "0",
         fontSize: fontSize || "16px",
         textAlign: textAlign || "left",
         color: textColor || undefined,
@@ -191,6 +198,49 @@ export function ButtonBlock({ block, isEditor }: BlockRendererProps) {
   );
 }
 
+const COLUMN_RATIOS: Record<string, [number, number]> = {
+  "50/50": [1, 1],
+  "60/40": [3, 2],
+  "40/60": [2, 3],
+  "33/67": [1, 2],
+  "67/33": [2, 1],
+};
+
+export function ColumnsBlock({ block, isEditor }: BlockRendererProps) {
+  const { leftContent, rightContent, columnRatio, fontSize, textColor, paddingSize } = block.props;
+  const py = BLOCK_PADDING[paddingSize ?? "md"];
+  const [leftFlex, rightFlex] = COLUMN_RATIOS[columnRatio ?? "50/50"];
+
+  return (
+    <div className={`flex gap-6 px-6 ${py}`}>
+      <div
+        style={{
+          flex: leftFlex,
+          minWidth: 0,
+          fontSize: fontSize || "16px",
+          color: textColor || undefined,
+        }}
+      >
+        <p className="whitespace-pre-wrap">
+          {leftContent || (isEditor ? "Left column text..." : "")}
+        </p>
+      </div>
+      <div
+        style={{
+          flex: rightFlex,
+          minWidth: 0,
+          fontSize: fontSize || "16px",
+          color: textColor || undefined,
+        }}
+      >
+        <p className="whitespace-pre-wrap">
+          {rightContent || (isEditor ? "Right column text..." : "")}
+        </p>
+      </div>
+    </div>
+  );
+}
+
 export function DividerBlock({ block }: BlockRendererProps) {
   const { style, color, paddingSize } = block.props;
   const py = BLOCK_PADDING[paddingSize ?? "sm"];
@@ -218,6 +268,8 @@ export function BlockRenderer({ block, isEditor }: BlockRendererProps) {
       return <ImageBlock block={block} isEditor={isEditor} />;
     case "button":
       return <ButtonBlock block={block} isEditor={isEditor} />;
+    case "columns":
+      return <ColumnsBlock block={block} isEditor={isEditor} />;
     case "divider":
       return <DividerBlock block={block} isEditor={isEditor} />;
     default:
