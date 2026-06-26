@@ -226,6 +226,8 @@ export function ColumnsBlock({ block, isEditor }: BlockRendererProps) {
     paddingSize,
     verticalDivider,
     dividerColor,
+    contentAlign,
+    columnBackground,
   } = block.props;
   const py = BLOCK_PADDING[paddingSize ?? "md"];
   const [leftFlex, rightFlex] = COLUMN_RATIOS[columnRatio ?? "50/50"];
@@ -234,22 +236,32 @@ export function ColumnsBlock({ block, isEditor }: BlockRendererProps) {
   const hasRight = !!rightContent;
   const showDivider = verticalDivider === true || verticalDivider === "true";
 
-  const colStyle = (flex: number) => ({
+  const justifyMap: Record<string, string> = {
+    top: "flex-start",
+    center: "center",
+    bottom: "flex-end",
+  };
+  const justifyContent = justifyMap[contentAlign ?? "top"] ?? "flex-start";
+
+  const colStyle = (flex: number, padding: string) => ({
     flex,
     minWidth: 0,
+    padding,
+    display: "flex",
+    flexDirection: "column" as const,
+    justifyContent,
     fontSize: fontSize || "16px",
     color: textColor || undefined,
+    backgroundColor: columnBackground || undefined,
+    borderRadius: columnBackground ? "6px" : undefined,
   });
 
-  const activeCount = [hasLeft, hasMiddle, hasRight].filter(Boolean).length;
-  const equalFlex = activeCount > 0 ? 1 : 1;
-
   return (
-    <div className={`flex items-stretch gap-0 px-6 ${py}`}>
+    <div className={`flex items-start gap-0 px-6 ${py}`}>
       {/* Left */}
       {hasLeft && (
         <>
-          <div style={{ ...colStyle(hasMiddle || hasRight ? leftFlex : 1), padding: "0 12px 0 0" }}>
+          <div style={colStyle(hasMiddle || hasRight ? leftFlex : 1, "12px")}>
             <p className="whitespace-pre-wrap">{leftContent}</p>
           </div>
           {showDivider && (hasMiddle || hasRight) && <VerticalDivider color={dividerColor} />}
@@ -259,7 +271,7 @@ export function ColumnsBlock({ block, isEditor }: BlockRendererProps) {
       {/* Middle (optional 3rd column) */}
       {hasMiddle && (
         <>
-          <div style={{ ...colStyle(1), padding: hasLeft && hasRight ? "0 12px" : hasLeft ? "0 0 0 12px" : "0 12px 0 0" }}>
+          <div style={colStyle(1, "12px")}>
             <p className="whitespace-pre-wrap">{middleContent}</p>
           </div>
           {showDivider && hasRight && <VerticalDivider color={dividerColor} />}
@@ -268,7 +280,7 @@ export function ColumnsBlock({ block, isEditor }: BlockRendererProps) {
 
       {/* Right */}
       {hasRight && (
-        <div style={{ ...colStyle(hasLeft || hasMiddle ? rightFlex : 1), padding: "0 0 0 12px" }}>
+        <div style={colStyle(hasLeft || hasMiddle ? rightFlex : 1, "12px")}>
           <p className="whitespace-pre-wrap">{rightContent}</p>
         </div>
       )}

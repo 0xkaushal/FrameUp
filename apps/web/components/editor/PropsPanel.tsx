@@ -438,6 +438,28 @@ export function PropsPanel() {
                 type="color"
               />
             )}
+            <div className="grid gap-2">
+              <Label className="text-xs">Content Alignment</Label>
+              <div className="flex gap-1">
+                {(["top", "center", "bottom"] as const).map((a) => (
+                  <Button
+                    key={a}
+                    variant={(selectedBlock.props.contentAlign ?? "top") === a ? "default" : "outline"}
+                    size="sm"
+                    className="flex-1 capitalize"
+                    onClick={() => handlePropChange("contentAlign", a)}
+                  >
+                    {a}
+                  </Button>
+                ))}
+              </div>
+            </div>
+            <PropField
+              label="Column Background"
+              value={selectedBlock.props.columnBackground || ""}
+              onChange={(v) => handlePropChange("columnBackground", v)}
+              type="color"
+            />
             <PropField
               label="Font Size"
               value={selectedBlock.props.fontSize || "16px"}
