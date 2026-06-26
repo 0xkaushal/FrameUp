@@ -23,10 +23,13 @@ function SortableBlock({ block }: { block: Block }) {
     isDragging,
   } = useSortable({ id: block.id });
 
+  const blockWidth = block.props.blockWidth ?? "100%";
+
   const style = {
     transform: CSS.Transform.toString(transform),
     transition,
     opacity: isDragging ? 0.5 : 1,
+    width: blockWidth,
   };
 
   const isSelected = selectedBlockId === block.id;
@@ -89,7 +92,7 @@ export function Canvas() {
             items={blocks.map((b) => b.id)}
             strategy={verticalListSortingStrategy}
           >
-            <div className="space-y-0 p-2">
+            <div className="flex flex-wrap p-2">
               {blocks.map((block) => (
                 <SortableBlock key={block.id} block={block} />
               ))}

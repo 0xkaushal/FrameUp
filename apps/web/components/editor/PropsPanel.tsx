@@ -80,6 +80,24 @@ export function PropsPanel() {
           </div>
         </div>
 
+        {/* Universal: Block Width */}
+        <div className="grid gap-2">
+          <Label className="text-xs">Block Width</Label>
+          <div className="flex gap-1">
+            {(["100%", "50%"] as const).map((w) => (
+              <Button
+                key={w}
+                variant={(selectedBlock.props.blockWidth ?? "100%") === w ? "default" : "outline"}
+                size="sm"
+                className="flex-1"
+                onClick={() => handlePropChange("blockWidth", w)}
+              >
+                {w === "100%" ? "Full" : "Half"}
+              </Button>
+            ))}
+          </div>
+        </div>
+
         {selectedBlock.type === "hero" && (
           <>
             <PropField
@@ -373,15 +391,28 @@ export function PropsPanel() {
         {selectedBlock.type === "columns" && (
           <>
             <div className="grid gap-2">
-              <Label className="text-xs">Left Column</Label>
+              <Label className="text-xs font-semibold">Left Column</Label>
+              <PropField
+                label="Title (optional)"
+                value={selectedBlock.props.leftTitle || ""}
+                onChange={(v) => handlePropChange("leftTitle", v)}
+                placeholder="Heading..."
+              />
               <textarea
                 className="flex min-h-[80px] w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
                 value={selectedBlock.props.leftContent || ""}
+                placeholder="Body text..."
                 onChange={(e) => handlePropChange("leftContent", e.target.value)}
               />
             </div>
             <div className="grid gap-2">
-              <Label className="text-xs">Middle Column (optional — enables 3 columns)</Label>
+              <Label className="text-xs font-semibold">Middle Column (optional — enables 3 columns)</Label>
+              <PropField
+                label="Title (optional)"
+                value={selectedBlock.props.middleTitle || ""}
+                onChange={(v) => handlePropChange("middleTitle", v)}
+                placeholder="Heading..."
+              />
               <textarea
                 className="flex min-h-[80px] w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
                 value={selectedBlock.props.middleContent || ""}
@@ -390,10 +421,17 @@ export function PropsPanel() {
               />
             </div>
             <div className="grid gap-2">
-              <Label className="text-xs">Right Column</Label>
+              <Label className="text-xs font-semibold">Right Column</Label>
+              <PropField
+                label="Title (optional)"
+                value={selectedBlock.props.rightTitle || ""}
+                onChange={(v) => handlePropChange("rightTitle", v)}
+                placeholder="Heading..."
+              />
               <textarea
                 className="flex min-h-[80px] w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
                 value={selectedBlock.props.rightContent || ""}
+                placeholder="Body text..."
                 onChange={(e) => handlePropChange("rightContent", e.target.value)}
               />
             </div>
