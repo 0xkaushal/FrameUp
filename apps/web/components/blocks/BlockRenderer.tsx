@@ -15,9 +15,9 @@ const HERO_PADDING: Record<string, string> = {
 };
 
 const BLOCK_PADDING: Record<string, string> = {
-  sm: "py-4",
-  md: "py-8",
-  lg: "py-16",
+  sm: "py-1",
+  md: "py-2",
+  lg: "py-4",
 };
 
 const HERO_MIN_H: Record<string, string> = {
