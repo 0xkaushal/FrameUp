@@ -98,6 +98,26 @@ export function PropsPanel() {
           </div>
         </div>
 
+        {/* Universal: Column Pin (half-width only) */}
+        {(selectedBlock.props.blockWidth ?? "100%") === "50%" && (
+          <div className="grid gap-2">
+            <Label className="text-xs">Column Pin</Label>
+            <div className="flex gap-1">
+              {([["", "Auto"], ["1", "Left"], ["2", "Right"]] as const).map(([val, label]) => (
+                <Button
+                  key={val}
+                  variant={(selectedBlock.props.colPin ?? "") === val ? "default" : "outline"}
+                  size="sm"
+                  className="flex-1"
+                  onClick={() => handlePropChange("colPin", val)}
+                >
+                  {label}
+                </Button>
+              ))}
+            </div>
+          </div>
+        )}
+
         {selectedBlock.type === "hero" && (
           <>
             <PropField

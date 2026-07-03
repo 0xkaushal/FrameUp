@@ -24,12 +24,17 @@ function SortableBlock({ block }: { block: Block }) {
   } = useSortable({ id: block.id });
 
   const blockWidth = block.props.blockWidth ?? "100%";
+  const colPin = block.props.colPin; // "1" | "2" | undefined
+
+  const gridColumn =
+    blockWidth === "100%" ? "1 / -1" : colPin ? String(colPin) : "auto";
 
   const style = {
     transform: CSS.Transform.toString(transform),
     transition,
     opacity: isDragging ? 0.5 : 1,
-    width: blockWidth,
+    gridColumn,
+    minWidth: 0,
   };
 
   const isSelected = selectedBlockId === block.id;
@@ -92,7 +97,7 @@ export function Canvas() {
             items={blocks.map((b) => b.id)}
             strategy={verticalListSortingStrategy}
           >
-            <div className="flex flex-wrap p-2">
+            <div className="grid grid-cols-2 items-start p-2">
               {blocks.map((block) => (
                 <SortableBlock key={block.id} block={block} />
               ))}
